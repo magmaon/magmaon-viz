@@ -12,5 +12,144 @@
 	</head>
 	<body>
 		<h1>Magmaon-Web</h1>
+		<main>
+			<svg viewBox="0 0 300 200" id="gameArea">
+				<g id="table">
+					<rect x="0" y="0" width="50" height="50" fill="blue" />
+					<rect x="250" y="0" width="50" height="50" fill="yellow" />
+				</g>
+				<g id="robots">
+					<g id="robots-blue"></g>
+					<g id="robots-yellow"></g>
+				</g>
+				<g id="events"></g>
+			</svg>
+			<button id="startButton">Start!</button>
+		</main>
 	</body>
 </html>
+
+<style>
+	#gameArea {
+		max-width: 56rem;
+		width: 100%;
+		height: auto;
+		border: 2px solid black;
+	}
+</style>
+
+<script>
+	const gameArea = document.getElementById("gameArea");
+	const robotsBlue = document.getElementById("robots-blue");
+	const robotsYellow = document.getElementById("robots-yellow");
+	const events = document.getElementById("events");
+	if (!gameArea || !robotsBlue || !robotsYellow || !events) {
+		throw new Error("Missing game area elements");
+	}
+	const startButton = document.getElementById("startButton");
+	if (!startButton) {
+		throw new Error("Missing start button");
+	}
+
+	function createRobot(x: number, y: number, color: string) : string {
+		const robotEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+		robotEl.setAttribute("x", x.toString());
+		robotEl.setAttribute("y", y.toString());
+		robotEl.setAttribute("width", "45");
+		robotEl.setAttribute("height", "20");
+		robotEl.setAttribute("fill", color);
+		const id = Math.random().toString(36).substring(2, 15);
+		robotEl.setAttribute("id", `robot-${id}`);
+		if (color === "blue") {
+			robotsBlue.appendChild(robotEl);
+		} else {
+			robotsYellow.appendChild(robotEl);
+		}
+		return id;
+	}
+
+	function updateRobotPos(id: string, x: number, y: number): boolean {
+		const robotEl = document.getElementById(`robot-${id}`);
+		if (robotEl) {
+			robotEl.setAttribute("x", x.toString());
+			robotEl.setAttribute("y", y.toString());
+			return true;
+		}
+		return false;
+	}
+
+	function removeRobot(id: string): boolean {
+		const robotEl = document.getElementById(`robot-${id}`);
+		if (robotEl) {
+			robotEl.remove();
+			return true;
+		}
+		console.warn(`Robot with id ${id} not found`);
+		return false;
+	}
+
+	function createEvent(x: number, y: number): string {
+		const eventEl = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+		eventEl.setAttribute("cx", x.toString());
+		eventEl.setAttribute("cy", y.toString());
+		eventEl.setAttribute("r", "50");
+		eventEl.setAttribute("fill", "purple");
+		const id = Math.random().toString(36).substring(2, 15);
+		eventEl.setAttribute("id", `event-${id}`);
+		events.appendChild(eventEl);
+		return id;
+	}
+
+	function removeEvent(id: string): boolean {
+		const eventEl = document.getElementById(`event-${id}`);
+		if (eventEl) {
+			eventEl.remove();
+			return true;
+		}
+		return false;
+	}
+	
+	let tickHandle: any = undefined;
+	let tickCount = 0;
+	let robot1Id: string | undefined = undefined;
+	let robot2Id: string | undefined = undefined;
+	function tick() {
+		if (tickCount === 0) {
+			robot1Id = createRobot(5, 15, "blue");
+			robot2Id = createRobot(250, 15, "yellow");
+		} else if (tickCount === 1) {
+			updateRobotPos(robot1Id, 55, 45);
+			updateRobotPos(robot2Id, 200, 15);
+		} else if (tickCount === 2) {
+			updateRobotPos(robot1Id, 105, 55);
+			updateRobotPos(robot2Id, 150, 15);
+		} else if (tickCount === 3) {
+			updateRobotPos(robot1Id, 155, 75);
+			updateRobotPos(robot2Id, 100, 15);
+		} else if (tickCount === 4) {
+			updateRobotPos(robot1Id, 205, 85);
+			updateRobotPos(robot2Id, 50, 15);
+		} else if (tickCount === 5) {
+			removeRobot(robot1Id);
+			removeRobot(robot2Id);
+			const eventId = createEvent(150, 25);
+			setTimeout(() => {
+				removeEvent(eventId);
+			}, 500);
+		} else if (tickCount === 6) {
+			tickCount = -1; // will be incremented to 0 below
+		}
+		tickCount++;
+	}
+
+	startButton.addEventListener("click", () => {
+		if (tickHandle) {
+			clearInterval(tickHandle);
+			tickHandle = undefined;
+			startButton.textContent = "Start!";
+		} else {
+			tickHandle = setInterval(tick, 1000);
+			startButton.textContent = "Stop!";
+		}
+	});
+</script>
