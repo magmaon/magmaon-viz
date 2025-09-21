@@ -31,7 +31,7 @@ class RobotImpl implements Robot {
         this.position = { x, y, theta };
 
         // Apply it to the SVG canvas
-        this.element.setAttribute("transform", `translate(${x}, ${y}), rotate(${y})`)
+        this.element.setAttribute("transform", `translate(${x}, ${y}), rotate(${theta})`)
     }
 
     destroy(): void {
@@ -47,9 +47,12 @@ export function createRobot(parent: SVGElement, options?: Partial<{ initialPosit
 
     // Create the initial robot SVG object, just a rect for now
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "400");
-    rect.setAttribute("height", "200");
+    const width = 400;
+    const height = 200;
+    rect.setAttribute("width", width.toString());
+    rect.setAttribute("height", height.toString());
     rect.setAttribute("fill", "purple");
+    rect.style.transformOrigin = `${width/2}px ${height/2}px`;
     parent.appendChild(rect);
 
     return new RobotImpl(rect, initialPosition);

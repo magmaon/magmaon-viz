@@ -1,5 +1,5 @@
 import { createRobot, type Robot } from "./robot";
-import { PATH_EXAMPLE_1 } from "./example";
+import { PATH1 } from "./example";
 
 export interface Viz {
     play(): void;
@@ -25,7 +25,7 @@ class VizImpl implements Viz {
         if (!this.isInitialized) this.init();
         this._isPlaying = true;
         this.step();
-        this.tickerHandler = setInterval(() => { this.step() }, 500);
+        this.tickerHandler = setInterval(() => { this.step() }, 100);
     }
 
     pause(): void {
@@ -62,11 +62,9 @@ class VizImpl implements Viz {
         // Move the yellow bot to the position describe by PATH_EXAMPLE_1;
         const yellowBot = this.state.robots[0];
         const ticks = this.state.ticks++;
-        if (PATH_EXAMPLE_1.length > ticks) {
-            const posTo = PATH_EXAMPLE_1[ticks];
-            yellowBot.moveTo(posTo.x, posTo.y, posTo.theta);
-            console.log("move to:", posTo);
-        }
+        if (ticks > 1000) return;
+        const posTo = PATH1(ticks);
+        yellowBot.moveTo(posTo.x, posTo.y, posTo.theta);
     }
 }
 
