@@ -1,6 +1,6 @@
-# Magmaon-Web
+# Magmaon-Viz
 
-> Magmaon Web UI, the simulator for Eurobot, the international amateur robotics contest.
+> Magmaon-Viz is a visualization tool for the Eurobot contest, an international amateur robotics competition.
 
 ## Disclaimer - Very Early Stage
 
