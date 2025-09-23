@@ -1,11 +1,11 @@
 import type { GameController } from "./core/state/game";
 
 export class Choregraph<T extends GameController> {
-    private tickerHandle : any = undefined;
+    private tickerHandle: any = undefined;
     private tickActions: ((gc: T, tick: number, stop: () => void) => void)[] = [];
     private tickCount: number = 0;
     private speedMultiplier: number = 1.0;
-    constructor(private gameController: T, private tickRate: number = 30) {}
+    constructor(private gameController: T, private tickRate: number = 30) { }
 
     getGameController(): T {
         return this.gameController;

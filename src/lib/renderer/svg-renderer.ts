@@ -64,7 +64,7 @@ export class SvgRobot implements RobotRendererObject {
     private svgNode: SVGElement;
     private visible: boolean = true;
     private position: RobotPosition = { x: 0, y: 0, theta: 0 };
-     private size: { width: number; height: number };
+    private size: { width: number; height: number };
     team: TeamColor;
     constructor(svgNode: SVGElement, team: TeamColor, size: { width: number; height: number }, show: boolean = true) {
         this.svgNode = svgNode;

@@ -8,7 +8,7 @@ import type { RobotPosition } from "../models/physics";
  * VizGameController, is a GameController which supports rendering it 
  * via a renderer.
  */
-export class VizGameController extends GameController {   
+export class VizGameController extends GameController {
     constructor(blueTeam: Team, yellowTeam: Team, private renderer: BaseRenderer) {
         super(blueTeam, yellowTeam);
     }
@@ -40,8 +40,8 @@ export class VizGameController extends GameController {
 }
 
 export class VizAwareRobot implements Robot {
-    constructor(private baseRobot: Robot, private rendererObject: RobotRendererObject) {}
-    
+    constructor(private baseRobot: Robot, private rendererObject: RobotRendererObject) { }
+
     getInnerRobot(): Robot {
         return this.baseRobot;
     }

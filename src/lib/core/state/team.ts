@@ -3,8 +3,8 @@ import type { Team, TeamColor } from "../models/team";
 
 export class TeamImpl implements Team {
     private robots: Set<Robot> = new Set();
-    
-    constructor(public readonly color: TeamColor) {}
+
+    constructor(public readonly color: TeamColor) { }
     getRobots(): readonly Robot[] {
         return Array.from(this.robots);
     }

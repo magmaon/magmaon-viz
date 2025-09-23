@@ -21,7 +21,7 @@ export interface BaseRenderer {
      * @returns the newly created renderer object.
      */
     createRobotObject(team: TeamColor): RobotRendererObject;
-    
+
     /**
      * Destroy a renderer object, removing it from the scene.
      * 

@@ -1,5 +1,5 @@
 ---
-import TableMap from '@assets/maps/2026_BETA_map.svg'
+import TableMap from "@assets/maps/2026_BETA_map.svg";
 ---
 
 <html lang="en">
@@ -38,9 +38,9 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 	}
 
 	// - Create a new game controller and renderer
-	import {VizGameController} from "@lib/core/viz/game";
-	import {SvgGameRenderer} from "@lib/renderer/svg-renderer";
-	import {TeamImpl} from "@lib/core/state/team";
+	import { VizGameController } from "@lib/core/viz/game";
+	import { SvgGameRenderer } from "@lib/renderer/svg-renderer";
+	import { TeamImpl } from "@lib/core/state/team";
 	import { Choregraph } from "@lib/choregraph";
 	import { path1 } from "@lib/examples/robot-path";
 
@@ -51,7 +51,11 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 	const yellowTeam = new TeamImpl("yellow");
 	const blueTeam = new TeamImpl("blue");
 	const svgRenderer = new SvgGameRenderer(vizRoot);
-	const gameController = new VizGameController(blueTeam, yellowTeam, svgRenderer);
+	const gameController = new VizGameController(
+		blueTeam,
+		yellowTeam,
+		svgRenderer,
+	);
 	const choregraph = new Choregraph(gameController);
 
 	// - Register one yellow robot
@@ -65,7 +69,7 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 			return;
 		}
 		yellowRobot.moveTo(pathPos);
-	})
+	});
 
 	// - Enable the start button
 	startButton.removeAttribute("disabled");
