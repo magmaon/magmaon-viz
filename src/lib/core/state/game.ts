@@ -1,15 +1,16 @@
-import type { Game } from "@lib/core/game";
-import type { RobotPosition } from "@lib/core/physics";
-import type { Robot } from "@lib/core/robot";
-import type { Team, TeamColor } from "@lib/core/team";
+import type { Game } from "@lib/core/models/game";
+import type { RobotPosition } from "@lib/core/models/physics";
+import type { Robot } from "@lib/core/models/robot";
+import type { Team, TeamColor } from "@lib/core/models/team";
+import { BaseRobot } from "./robot";
 
 /**
- * Game Implementation
+ * GameController
  * 
- * Implements a very basic game state management,
+ * Implements a very basic game controller,
  * with just enough to keep track of the game playing.
  */
-export class GameImpl implements Game {
+export class GameController implements Game {
     private blueTeam: Team;
     private yellowTeam: Team;
     private robots: Set<Robot>;
@@ -34,13 +35,12 @@ export class GameImpl implements Game {
         });
     }
 
-    registerRobot(teamColor: TeamColor, robot: Robot): boolean {
-        if (this.robots.has(robot)) {
-            return false; // Robot already registered
-        }
-        this.robots.add(robot);
+    registerRobot(teamColor: TeamColor): Robot {
         const team = this.getTeam(teamColor);
-        return team.addRobot(robot);
+        const newRobot = new BaseRobot();
+        this.robots.add(newRobot);
+        team.addRobot(newRobot);
+        return newRobot;
     }
 
     unregisterRobot(robot: Robot): boolean {

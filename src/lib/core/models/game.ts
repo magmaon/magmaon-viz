@@ -28,10 +28,9 @@ export interface Game {
      * Register a new robot in the game.
      * 
      * @param teamColor the color of the team the robot belongs to.
-     * @param robot the robot to register.
-     * @returns if the robot has been registered (if not, it is already known).
+     * @returns the newly registered robot.
      */
-    registerRobot(teamColor: TeamColor, robot: Robot): boolean;
+    registerRobot(teamColor: TeamColor): Robot;
 
     /**
      * Unregister a robot from the game.

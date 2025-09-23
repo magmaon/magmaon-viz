@@ -1,13 +1,13 @@
-import type { RobotPosition } from "@lib/core/physics";
-import type { Robot } from "@lib/core/robot";
+import type { RobotPosition } from "@lib/core/models/physics";
+import type { Robot } from "@lib/core/models/robot";
 
 /**
- * Robot Implementation
+ * Base Robot Implementation
  * 
- * Implements a very basic robot state management,
+ * Implements a very basic robot game object,
  * with just enough to keep track of its position.
  */
-export class RobotImpl implements Robot {
+export class BaseRobot implements Robot {
     private position: RobotPosition;
 
     constructor() {

@@ -30,8 +30,6 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 </style>
 
 <script>
-	import { newViz } from '@lib/viz';
-
 	const gameArea = document.getElementById("gameArea");
 	const startButton = document.getElementById("startButton");
 	const resetButton = document.getElementById("resetButton");
@@ -39,28 +37,44 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 		throw new Error("Failed to get elements");
 	}
 
-	const viz = newViz(gameArea);
-	if (!viz) {
-		throw new Error("Failed to create viz");
-	}
+	// - Create a new game controller and renderer
+	import {VizGameController} from "@lib/core/viz/game";
+	import {SvgGameRenderer} from "@lib/renderer/svg-renderer";
+	import {TeamImpl} from "@lib/core/state/team";
+	import { Choregraph } from "@lib/choregraph";
+	import { path1 } from "@lib/examples/robot-path";
+
+	const vizRoot = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	vizRoot.setAttribute("id", "vizRoot");
+	gameArea.appendChild(vizRoot);
+
+	const yellowTeam = new TeamImpl("yellow");
+	const blueTeam = new TeamImpl("blue");
+	const svgRenderer = new SvgGameRenderer(vizRoot);
+	const gameController = new VizGameController(blueTeam, yellowTeam, svgRenderer);
+	const choregraph = new Choregraph(gameController);
+
+	// - Register one yellow robot
+	const yellowRobot = gameController.registerRobot("yellow");
+	// - and make it move
+	choregraph.registerTickAction((_, tick) => {
+		const pathPos = path1(tick);
+		yellowRobot.moveTo({ x: pathPos?.x, y: pathPos?.y, theta: pathPos?.theta });
+	})
+
+	// - Enable the start button
 	startButton.removeAttribute("disabled");
 
+	// - Add event listeners to the buttons
 	startButton.addEventListener("click", () => {
-		if (resetButton.hasAttribute("disabled")) {
-			resetButton.removeAttribute("disabled");
-		}
-		if (viz.isPlaying()) {
-			viz.pause();
-			startButton.textContent = "Resume";
-		} else {
-			viz.play();
-			startButton.textContent = "Pause";
-		}
+		startButton.setAttribute("disabled", "true");
+		resetButton.removeAttribute("disabled");
+		choregraph.start();
 	});
-
 	resetButton.addEventListener("click", () => {
-		viz.clear();
-		startButton.textContent = "Start!";
-		resetButton.setAttribute("disabled", "");
+		gameController.clear();
+		startButton.removeAttribute("disabled");
+		resetButton.setAttribute("disabled", "true");
+		choregraph.reset();
 	});
 </script>
