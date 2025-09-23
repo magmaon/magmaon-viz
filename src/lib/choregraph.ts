@@ -4,6 +4,7 @@ export class Choregraph<T extends GameController> {
     private tickerHandle : any = undefined;
     private tickActions: ((gc: T, tick: number) => void)[] = [];
     private tickCount: number = 0;
+    private speedMultiplier: number = 1.0;
     constructor(private gameController: T, private tickRate: number = 10) {}
 
     getGameController(): T {
@@ -48,5 +49,15 @@ export class Choregraph<T extends GameController> {
 
     clearTickActions(): void {
         this.tickActions = [];
+    }
+
+    setSpeedMultiplier(multiplier: number): void {
+        if (multiplier > 0 && multiplier <= 10) {
+            this.speedMultiplier = multiplier;
+        }
+    }
+
+    getSpeedMultiplier(): number {
+        return this.speedMultiplier;
     }
 }

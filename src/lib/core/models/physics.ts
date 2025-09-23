@@ -18,3 +18,6 @@ export interface RobotPosition {
      */
     theta: AngleDeg;
 }
+
+export const TABLE_WIDTH_MM = 3000;
+export const TABLE_HEIGHT_MM = 2000;

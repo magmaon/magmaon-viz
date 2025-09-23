@@ -2,6 +2,7 @@ import type { RobotPosition } from "@lib/core/models/physics";
 import type { TeamColor } from "@lib/core/models/team";
 import type { Position2D } from "@lib/core/renderer/2d";
 import type { BaseRenderer, BaseRendererObject, RobotRendererObject, RotatableRendererObject } from "@lib/core/renderer/base";
+import { TABLE_HEIGHT_MM } from "@lib/core/models/physics";
 
 /**
  * SVG Game renderer
@@ -40,9 +41,8 @@ export class SvgGameRenderer implements BaseRenderer {
         robotSvg.setAttribute("width", "400");
         robotSvg.setAttribute("height", "200");
         robotSvg.setAttribute("fill", "red");
-        robotSvg.setAttribute("x", "0");
-        robotSvg.setAttribute("y", "0");
-        robotSvg.style.transformOrigin = "200px 100px"; // center of the rectangle
+        robotSvg.setAttribute("x", "-200");
+        robotSvg.setAttribute("y", "-100");
         this.svgVizRoot.appendChild(robotSvg);
         return new SvgRobot(robotSvg, team);
     }
@@ -105,6 +105,6 @@ export class SvgRobot implements RobotRendererObject {
      * Set the internal transform of the SVG node.
      */
     private updateTransform() {
-        this.svgNode.setAttribute("transform", `translate(${this.position.y}, ${this.position.x}), rotate(${-this.position.theta - 90})`);
+        this.svgNode.setAttribute("transform", `translate(${this.position.x}, ${TABLE_HEIGHT_MM - this.position.y}), rotate(${-this.position.theta - 90})`);
     }
 }
