@@ -3,6 +3,7 @@ import type { TeamColor } from "@lib/core/models/team";
 import type { Position2D } from "@lib/core/renderer/2d";
 import type { BaseRenderer, BaseRendererObject, RobotRendererObject, RotatableRendererObject } from "@lib/core/renderer/base";
 import { TABLE_HEIGHT_MM } from "@lib/core/models/physics";
+import robotVisual from "@assets/robots/minimalist.svg?raw";
 
 /**
  * SVG Game renderer
@@ -37,14 +38,20 @@ export class SvgGameRenderer implements BaseRenderer {
     }
 
     createRobotObject(team: TeamColor): RobotRendererObject {
-        const robotSvg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        robotSvg.setAttribute("width", "400");
-        robotSvg.setAttribute("height", "200");
-        robotSvg.setAttribute("fill", "red");
-        robotSvg.setAttribute("x", "-200");
-        robotSvg.setAttribute("y", "-100");
-        this.svgVizRoot.appendChild(robotSvg);
-        return new SvgRobot(robotSvg, team);
+        const robotSvg = new DOMParser().parseFromString(robotVisual, "image/svg+xml").documentElement;
+        const robotGroup = robotSvg.querySelector("g");
+        if (!robotGroup) {
+            throw new Error("Invalid robot SVG: missing <g class='robot'> element");
+        }
+        // Calculate the offset to center the robot at (0,0)
+        const svgWidth = parseFloat(robotSvg.getAttribute("width") || "200");
+        const svgHeight = parseFloat(robotSvg.getAttribute("height") || "400");
+        robotGroup.setAttribute("transform-origin", `${svgWidth / 2}px ${svgHeight / 2}px`);
+        // Set the team color as a CSS variable
+        robotGroup.style.setProperty("--team-color", team === "blue" ? "#4470b7" : "#e2be1fff");
+        // Append to the root SVG
+        this.svgVizRoot.appendChild(robotGroup);
+        return new SvgRobot(robotGroup, team, { width: svgWidth, height: svgHeight });
     }
 }
 
@@ -57,11 +64,13 @@ export class SvgRobot implements RobotRendererObject {
     private svgNode: SVGElement;
     private visible: boolean = true;
     private position: RobotPosition = { x: 0, y: 0, theta: 0 };
+     private size: { width: number; height: number };
     team: TeamColor;
-    constructor(svgNode: SVGElement, team: TeamColor, show: boolean = true) {
+    constructor(svgNode: SVGElement, team: TeamColor, size: { width: number; height: number }, show: boolean = true) {
         this.svgNode = svgNode;
         this.visible = show;
         this.team = team;
+        this.size = size;
         if (!show) {
             this.hide();
         }
@@ -105,6 +114,6 @@ export class SvgRobot implements RobotRendererObject {
      * Set the internal transform of the SVG node.
      */
     private updateTransform() {
-        this.svgNode.setAttribute("transform", `translate(${this.position.x}, ${TABLE_HEIGHT_MM - this.position.y}), rotate(${-this.position.theta - 90})`);
+        this.svgNode.setAttribute("transform", `translate(${this.position.x - this.size.width / 2}, ${TABLE_HEIGHT_MM - this.position.y - this.size.height / 2}), rotate(${-this.position.theta})`);
     }
 }

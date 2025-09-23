@@ -5,7 +5,7 @@ export class Choregraph<T extends GameController> {
     private tickActions: ((gc: T, tick: number) => void)[] = [];
     private tickCount: number = 0;
     private speedMultiplier: number = 1.0;
-    constructor(private gameController: T, private tickRate: number = 10) {}
+    constructor(private gameController: T, private tickRate: number = 30) {}
 
     getGameController(): T {
         return this.gameController;
