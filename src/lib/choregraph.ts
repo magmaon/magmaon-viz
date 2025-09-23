@@ -26,6 +26,7 @@ export class Choregraph<T extends GameController> {
     reset(): void {
         this.stop();
         this.tickCount = 0;
+        this.tick();
     }
 
     private tick(): void {
