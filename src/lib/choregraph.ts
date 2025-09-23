@@ -2,7 +2,7 @@ import type { GameController } from "./core/state/game";
 
 export class Choregraph<T extends GameController> {
     private tickerHandle : any = undefined;
-    private tickActions: ((gc: T, tick: number) => void)[] = [];
+    private tickActions: ((gc: T, tick: number, stop: () => void) => void)[] = [];
     private tickCount: number = 0;
     private speedMultiplier: number = 1.0;
     constructor(private gameController: T, private tickRate: number = 30) {}
@@ -32,15 +32,15 @@ export class Choregraph<T extends GameController> {
 
     private tick(): void {
         // Call all registered tick actions
-        this.tickActions.forEach(action => action(this.gameController, this.tickCount));
+        this.tickActions.forEach(action => action(this.gameController, this.tickCount, () => this.stop()));
         this.tickCount++;
     }
 
-    registerTickAction(action: (gc: T, tick: number) => void): void {
+    registerTickAction(action: (gc: T, tick: number, stop: () => void) => void): void {
         this.tickActions.push(action);
     }
 
-    unregisterTickAction(action: (gc: T, tick: number) => void): void {
+    unregisterTickAction(action: (gc: T, tick: number, stop: () => void) => void): void {
         const index = this.tickActions.indexOf(action);
         if (index !== -1) {
             this.tickActions.splice(index, 1);
