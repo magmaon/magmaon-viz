@@ -56,6 +56,7 @@ import TableMap from '@assets/maps/2026_BETA_map.svg'
 
 	// - Register one yellow robot
 	const yellowRobot = gameController.registerRobot("yellow");
+	yellowRobot.moveTo({ x: 300, y: 1700, theta: -90 });
 	// - and make it move
 	choregraph.registerTickAction((_, tick) => {
 		const pathPos = path1(tick);
